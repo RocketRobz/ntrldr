@@ -16,8 +16,8 @@ include $(DEVKITARM)/ds_rules
 # MAXMOD_SOUNDBANK contains a directory of music and sound effect files
 #---------------------------------------------------------------------------------
 TARGET		:=	$(shell basename $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
+BUILD		:=	bld
+SOURCES		:=	src
 DATA		:=	data
 INCLUDES	:=	include
 
@@ -47,7 +47,7 @@ LIBS	:= 	-lfat -lnds9
 # include and lib
 #---------------------------------------------------------------------------------
 LIBDIRS	:=	$(LIBNDS)
- 
+
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
 # rules for different file extensions
@@ -82,33 +82,33 @@ endif
 
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
- 
+
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 			-I$(CURDIR)/$(BUILD)
- 
+
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 #export GAME_ICON :=  $(CURDIR)/$(TARGET).bmp
 export GAME_TITLE     := "NTRLDR"
 export GAME_SUBTITLE1 := "dr1ft/UTP"
 export GAME_SUBTITLE2 := "discord.gg/CJZADTM"
- 
+
 .PHONY: bootloader bootstub $(BUILD) clean
 
 all: bootloader bootstub  $(BUILD)
- 
+
 #---------------------------------------------------------------------------------
 $(BUILD):
 	$(shell ./git.sh)
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
- 
+
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds source/git.h
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(DATA) $(shell find -name *.elf)  $(SOURCES)/git.h
 data:
 	@mkdir -p data
 
@@ -120,21 +120,21 @@ bootstub: data
 
 #---------------------------------------------------------------------------------
 else
- 
+
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).nds	: 	$(OUTPUT).elf
 $(OUTPUT).elf	:	$(OFILES)
- 
+
 #---------------------------------------------------------------------------------
 %.bin.o	:	%.bin
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	$(bin2o)
- 
+
 -include $(DEPSDIR)/*.d
- 
+
 #---------------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------------

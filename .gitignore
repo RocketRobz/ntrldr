@@ -1,5 +1,5 @@
-build/
-source/git.h
+bld/
+src/git.h
 data/
 *.elf
 *.nds

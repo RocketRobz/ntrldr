@@ -61,5 +61,3 @@ int main(void) {
     
 	return 0;
 }
-
-// psst: https://archive.org/details/firmwaredotnds (but you didnt hear it from me!)

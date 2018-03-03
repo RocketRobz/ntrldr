@@ -46,7 +46,7 @@ int main() {
             cfile("/warning_shown");
         }
 
-        puts("patching nvram...");
+        printf("patching nvram...");
 	readFirmware(0x3FE00,slot0,0x100); // read the first slot of profile data
 	readFirmware(0x3FF00,slot1,0x100); // and the second one
 	slot0[0x65] = 0xFC; // overwrite the least significant byte of the flags with a known good value
@@ -59,7 +59,7 @@ int main() {
 	slot1[0x73] = (crc1 & 0xFF00) >> 8;
 	writeFirmware(0x3FE00,slot0,0x100); // write our modifications back to nvram
 	writeFirmware(0x3FF00,slot1,0x100);
-	puts("ok\nloading firmware.nds...");
+	printf("ok\nloading firmware.nds...");
 	int error = runNdsFile("/firmware.nds",0,0); // bootstrap firmware.nds
 	printf("\x1b[31;1merror %d\nmake sure firmware.nds is in\nthe root of the filesystem!", error); // if something fucks up display an error code
 	}

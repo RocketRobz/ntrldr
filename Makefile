@@ -93,7 +93,7 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 #export GAME_ICON :=  $(CURDIR)/$(TARGET).bmp
 export GAME_TITLE     := "NTRLDR"
 export GAME_SUBTITLE1 := "dr1ft/UTP"
-export GAME_SUBTITLE2 := "discord.gg/CJZADTM"
+export GAME_SUBTITLE2 := "utopia.moe"
 
 .PHONY: bootloader bootstub $(BUILD) clean
 

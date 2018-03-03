@@ -6,3 +6,9 @@ I wasn't initially intending to release this to anyone, I was actually consideri
 NTRLDR patches the NVRAM to make it be seen as valid by NDS firmware and bootstraps firmware.nds from the root of the filesystem.
 
 firmware.nds can be found on archive.org with a simple search
+
+## Thanks to
+* devkitPro Team (toolchain, libraries, .nds loader code)
+* Martin Korth ([GBATEK](http://problemkaputt.de/gbatek.htm))
+* Loopy/olimar (created firmware.nds)
+* Everyone in the NDS and 3DS scenes! <3

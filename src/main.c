@@ -19,18 +19,16 @@ static unsigned char slot1[0x100];
 void cfile(char* filename) {
 FILE *fpt = fopen(filename,"wb");
 fclose(fpt);
-
 }
 
 int fileexist(char* filename) {
 FILE *fpt = fopen(filename,"rb");
-	if(!fpt){
-		return 1; // file doesn't exist
+	if(fpt == NULL){
+		return 0;
 	} else {
 		fclose(fpt);
-		return 0;
+		return 1;
 	}
-
 }
 
 int main() {
@@ -38,14 +36,14 @@ int main() {
 	printf("NTRLDR (git %s)\nwritten by dr1ft/UTP\nhttps://discord.gg/CJZADTM\n\n",gitrev); // display copyright and build information
 	if(fatInitDefault()) {
 
-        if(!fileexist("ubeenwarned")) {
+        if(fileexist("/warning_shown")) {
             printf("\x1b[31;1mWARNING!!!\nNEVER RUN THIS UTILIY ON NDS\nOR DSI\nYOU MAY PERMANENTLY BRICK YOUR\nDEVICE\nPRESS Y TO CONTINUE...\n\x1b[39m");
             while (1) {
                 swiWaitForVBlank();
                 scanKeys();
                 if (keysHeld() & KEY_Y) break;
             }
-            cfile("ubeenwarned");
+            cfile("/warning_shown");
         }
 
         puts("patching nvram...");
@@ -61,13 +59,12 @@ int main() {
 	slot1[0x73] = (crc1 & 0xFF00) >> 8;
 	writeFirmware(0x3FE00,slot0,0x100); // write our modifications back to nvram
 	writeFirmware(0x3FF00,slot1,0x100);
-	puts("all ready, loading firmware.nds...");
+	puts("ok\nloading firmware.nds...");
 	int error = runNdsFile("/firmware.nds",0,0); // bootstrap firmware.nds
 	printf("\x1b[31;1merror %d\nmake sure firmware.nds is in\nthe root of the filesystem!", error); // if something fucks up display an error code
-
 	}
 	else {
-		printf("\x1b[31;1mFAT failed to init");
+		printf("\x1b[31;1mfat init failure");
 	}
 	while(1) swiWaitForVBlank();
 	return 0;

@@ -36,7 +36,7 @@ int main() {
 	printf("NTRLDR (git %s)\nwritten by dr1ft/UTP\nhttps://discord.gg/CJZADTM\n\n",gitrev); // display copyright and build information
 	if(fatInitDefault()) {
 
-        if(fileexist("/warning_shown")) {
+        if(!fileexist("/warning_shown")) {
             printf("\x1b[31;1mWARNING!!!\nNEVER RUN THIS UTILIY ON NDS\nOR DSI\nYOU MAY PERMANENTLY BRICK YOUR\nDEVICE\nPRESS Y TO CONTINUE...\n\x1b[39m");
             while (1) {
                 swiWaitForVBlank();

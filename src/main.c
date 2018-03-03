@@ -33,7 +33,7 @@ FILE *fpt = fopen(filename,"rb");
 
 int main() {
 	consoleDemoInit(); // setup the display for text
-	printf("NTRLDR (git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
+	printf("NTRLDR (rel 5, git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
 	if(fatInitDefault()) {
 
         if(!fileexist("/warning_shown")) {

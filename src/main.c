@@ -41,10 +41,7 @@ int main() {
             }
             cfile("/warning_shown");
         }
-        /*if(isDSiMode()) {
-            REG_SCFG_EXT = 0x83000000; // seems to have no effect
-        }*/
-
+        
         printf("patching nvram...");
         readFirmware(0x3FE00,slot0,0x100); // read the first slot of profile data
         readFirmware(0x3FF00,slot1,0x100); // and the second one

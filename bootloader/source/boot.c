@@ -301,6 +301,44 @@ bool sdmmc_readsectors(u32 sector_no, u32 numsectors, void *out) {
 void mpu_reset();
 void mpu_reset_end();
 
+/*
+    these functions are supposed to be defined in libnds but for some reason when i try to build it tells me to go fuck myself
+    i hope it doesnt cause problems for anyone else when building
+*/
+
+//---------------------------------------------------------------------------------
+static u8 readTSC(u8 reg) {
+//---------------------------------------------------------------------------------
+
+	while (REG_SPICNT & 0x80);
+
+	REG_SPICNT = SPI_ENABLE | SPI_BAUD_4MHz | SPI_DEVICE_TOUCH | SPI_CONTINUOUS;
+	REG_SPIDATA = 1 | (reg << 1);
+
+	while (REG_SPICNT & 0x80);
+
+	REG_SPICNT = SPI_ENABLE | SPI_BAUD_4MHz | SPI_DEVICE_TOUCH;
+	REG_SPIDATA = 0;
+
+	while (REG_SPICNT & 0x80);
+	return REG_SPIDATA;
+}
+
+//---------------------------------------------------------------------------------
+static void writeTSC(u8 reg, u8 value) {
+//---------------------------------------------------------------------------------
+
+	while (REG_SPICNT & 0x80);
+
+	REG_SPICNT = SPI_ENABLE | SPI_BAUD_4MHz | SPI_DEVICE_TOUCH | SPI_CONTINUOUS;
+	REG_SPIDATA = reg << 1;
+
+	while (REG_SPICNT & 0x80);
+
+	REG_SPICNT = SPI_ENABLE | SPI_BAUD_4MHz | SPI_DEVICE_TOUCH;
+	REG_SPIDATA = value;
+}
+
 int main (void) {
 #ifdef NO_DLDI
 	dsiSD = true;
@@ -371,6 +409,21 @@ int main (void) {
     // try and escape dsi mde
     if(dsiMode) {
         //REG_SCFG_EXT = 0x12A03000; // this seems to actually break things ????
+        //NDSTouchscreenMode();
+        
+        writeTSC(0,3);
+        writeTSC(3,0);
+        readTSC(0x22);
+        writeTSC(0x22,0xF0);
+        writeTSC(0,0);
+        writeTSC(0x52,0x80);
+        writeTSC(0x51,0x00);
+        writeTSC(0,3);
+        readTSC(0x02);
+        writeTSC(2,0x98);
+        writeTSC(0,0xff);
+        writeTSC(5,0);
+        
         REG_SCFG_ROM = 0x703;
     }
 

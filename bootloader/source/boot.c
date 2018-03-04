@@ -367,6 +367,11 @@ int main (void) {
 #endif
 	// Pass command line arguments to loaded program
 	passArgs_ARM7();
+    
+    // try and escape dsi mde
+    if(dsiMode) {
+        REG_SCFG_ROM = 0x703;
+    }
 
 	startBinary_ARM7();
 

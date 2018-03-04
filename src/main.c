@@ -30,7 +30,7 @@ int fileexist(char* filename) {
 
 int main() {
 	consoleDemoInit(); // setup the display for text
-	printf("NTRLDR (rel 7, git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
+	printf("NTRLDR (rel 8, git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
 	if(fatInitDefault()) {
         if(!fileexist("/warning_shown")) {
             printf("\x1b[31;1mWARNING!!!\nNEVER RUN THIS UTILIY ON NDS\nOR DSI\nYOU MAY PERMANENTLY BRICK YOUR\nDEVICE\nPRESS Y TO CONTINUE...\n\x1b[39m");
@@ -41,6 +41,9 @@ int main() {
             }
             cfile("/warning_shown");
         }
+        /*if(isDSiMode()) {
+            REG_SCFG_EXT = 0x83000000; // seems to have no effect
+        }*/
 
         printf("patching nvram...");
         readFirmware(0x3FE00,slot0,0x100); // read the first slot of profile data

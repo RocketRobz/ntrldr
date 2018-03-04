@@ -1,0 +1,5 @@
+bld/
+src/git.h
+data/
+*.elf
+*.nds

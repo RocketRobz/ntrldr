@@ -16,9 +16,9 @@ include $(DEVKITARM)/ds_rules
 # MAXMOD_SOUNDBANK contains a directory of music and sound effect files
 #---------------------------------------------------------------------------------
 TARGET		:=	$(shell basename $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
-DATA		:=	data  
+BUILD		:=	bld
+SOURCES		:=	src
+DATA		:=	data
 INCLUDES	:=	include
 
 #---------------------------------------------------------------------------------
@@ -41,14 +41,13 @@ LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 # any extra libraries we wish to link with the project (order is important)
 #---------------------------------------------------------------------------------
 LIBS	:= 	-lfat -lnds9
- 
- 
+
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
 LIBDIRS	:=	$(LIBNDS)
- 
+
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
 # rules for different file extensions
@@ -66,8 +65,7 @@ export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-BINFILES	:=	load.bin bootstub.bin exceptionstub.bin
- 
+BINFILES	:=	load.bin bootstub.bin
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
 #---------------------------------------------------------------------------------
@@ -84,62 +82,59 @@ endif
 
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
- 
+
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 			-I$(CURDIR)/$(BUILD)
- 
+
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-#export GAME_ICON :=  $(CURDIR)/$(TARGET).bmp
+export GAME_ICON :=  $(CURDIR)/$(TARGET).bmp
 export GAME_TITLE     := "NTRLDR"
 export GAME_SUBTITLE1 := "dr1ft/UTP"
-export GAME_SUBTITLE2 := "discord.gg/CJZADTM"
- 
-.PHONY: bootloader bootstub exceptionstub $(BUILD) clean
+export GAME_SUBTITLE2 := "utopia.moe"
 
-all:	bootloader bootstub exceptionstub $(BUILD)
- 
+.PHONY: bootloader bootstub $(BUILD) clean
+
+all: bootloader bootstub  $(BUILD)
+
 #---------------------------------------------------------------------------------
 $(BUILD):
+	$(shell ./git.sh)
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
- 
+
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds
-    
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(DATA) $(shell find -name *.elf)  $(SOURCES)/git.h
 data:
 	@mkdir -p data
 
 bootloader: data
 	@$(MAKE) -C bootloader LOADBIN=$(CURDIR)/data/load.bin
-    
-exceptionstub: data    
-	@$(MAKE) -C nds-exception-stub STUBBIN=$(CURDIR)/data/exceptionstub.bin
-    
+
 bootstub: data
 	@$(MAKE) -C bootstub
 
 #---------------------------------------------------------------------------------
 else
- 
+
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).nds	: 	$(OUTPUT).elf
 $(OUTPUT).elf	:	$(OFILES)
- 
+
 #---------------------------------------------------------------------------------
 %.bin.o	:	%.bin
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	$(bin2o)
- 
+
 -include $(DEPSDIR)/*.d
- 
+
 #---------------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------------

@@ -370,6 +370,7 @@ int main (void) {
     
     // try and escape dsi mde
     if(dsiMode) {
+        //REG_SCFG_EXT = 0x12A03000; // this seems to actually break things ????
         REG_SCFG_ROM = 0x703;
     }
 

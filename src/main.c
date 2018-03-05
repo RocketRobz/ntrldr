@@ -30,10 +30,10 @@ int fileexist(char* filename) {
 
 int main() {
 	consoleDemoInit(); // setup the display for text
-	printf("NTRLDR (rel 8, git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
+	printf("NTRLDR (rel 9, git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
 	if(fatInitDefault()) {
         if(!fileexist("/warning_shown")) {
-            printf("\x1b[31;1mWARNING!!!\nNEVER RUN THIS UTILIY ON NDS\nOR DSI\nYOU MAY PERMANENTLY BRICK YOUR\nDEVICE\nPRESS Y TO CONTINUE...\n\x1b[39m");
+            printf("\x1b[31;1mwarning:\nthis program modifies nvram\ndirectly\nusing it on nds or dsi is not\nrecommended as it could brick\nyour device under extreme\ncircumstances\npress Y to continue...\n\x1b[39m");
             while (1) {
                 swiWaitForVBlank();
                 scanKeys();

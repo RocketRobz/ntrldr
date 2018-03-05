@@ -404,13 +404,11 @@ int main (void) {
 	}
 #endif
 	// Pass command line arguments to loaded program
-	passArgs_ARM7();
+	//passArgs_ARM7();
     
-    // try and escape dsi mde
+    // try and escape dsi mode
     if(dsiMode) {
-        //REG_SCFG_EXT = 0x12A03000; // this seems to actually break things ????
-        //NDSTouchscreenMode();
-        
+        // switch the TSC into NTR compat mode
         writeTSC(0,3);
         writeTSC(3,0);
         readTSC(0x22);
@@ -424,6 +422,7 @@ int main (void) {
         writeTSC(0,0xff);
         writeTSC(5,0);
         
+        // causes a bunch of TWL stuff to switch into NTR-friendly mode
         REG_SCFG_ROM = 0x703;
     }
 

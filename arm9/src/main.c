@@ -1,6 +1,6 @@
 /*
  * NTRLDR: Sets up NVRAM and chainloads firmware.nds on the 3DS.
- * Copyright 2018 dr1ft/UTP.
+ * Written by 2018 dr1ft/UTP
  */
 
 #include <nds.h>
@@ -8,7 +8,6 @@
 #include <fat.h>
 #include <stdio.h>
 #include "nds_loader_arm9.h"
-//#include "git.h"
 
 bool isRegularDS = true;
 
@@ -32,8 +31,7 @@ int fileexist(char* filename) {
 
 int main() {
 	consoleDemoInit(); // setup the display for text
-	//printf("NTRLDR (rel 8, git %s)\nwritten by dr1ft/UTP\n\n",gitrev); // display copyright and build information
-	printf("NTRLDR (rel 8, git %s)\nwritten by dr1ft/UTP\n\n","gitrev"); // display copyright and build information
+	printf("NTRLDR (release 9)\nwritten by dr1ft/UTP\n\n"); // display copyright and build information
 
 	fifoWaitValue32(FIFO_USER_06);
 	u16 arm7_SNDEXCNT = fifoGetValue32(FIFO_USER_07);
@@ -42,16 +40,13 @@ int main() {
 
 	if(fatInitDefault()) {
         if(!fileexist("/_nds/ntrldr/warning_shown") && !isRegularDS) {
-            printf("\x1b[31;1mWARNING!!!\nNEVER RUN THIS UTILITY ON DSI\nYOU MAY PERMANENTLY BRICK YOUR\nDEVICE\nPRESS Y TO CONTINUE...\n\x1b[39m");
+            printf("\x1b[31;1mwarning:\nthis program modifies nvram\ndirectly\nusing it on dsi is not\nrecommended as it could brick\nyour device under extreme\ncircumstances\npress Y to continue...\n\x1b[39m");
             while (1) {
                 swiWaitForVBlank();
                 scanKeys();
                 if (keysHeld() & KEY_Y) break;
             }
             cfile("/_nds/ntrldr/warning_shown");
-        }
-		if(isDSiMode()) {
-            REG_SCFG_EXT = 0x83000000; // seems to have no effect
         }
 
 		if (!isRegularDS) {

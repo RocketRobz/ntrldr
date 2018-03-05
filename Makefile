@@ -15,7 +15,8 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing extra header files
 # MAXMOD_SOUNDBANK contains a directory of music and sound effect files
 #---------------------------------------------------------------------------------
-TARGET		:=	$(shell basename $(CURDIR))
+#TARGET		:=	$(shell basename $(CURDIR))
+TARGET := ntrldr
 BUILD		:=	bld
 SOURCES		:=	src
 DATA		:=	data

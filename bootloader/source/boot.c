@@ -366,11 +366,11 @@ int main (void) {
 	}
 #endif
 	// Pass command line arguments to loaded program
-	passArgs_ARM7();
+	//passArgs_ARM7();
     
-    // try and escape dsi mde
+    // try and escape dsi mode
     if(dsiMode) {
-        //REG_SCFG_EXT = 0x12A03000; // this seems to actually break things ????
+		//REG_SCFG_EXT = 0x12A03000; // this seems to actually break things ????
         REG_SCFG_ROM = 0x703;
     }
 

@@ -15,10 +15,10 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing extra header files
 # MAXMOD_SOUNDBANK contains a directory of music and sound effect files
 #---------------------------------------------------------------------------------
-TARGET		:=	$(shell basename $(CURDIR))
+TARGET		:=	ntrldr
 BUILD		:=	bld
 SOURCES		:=	src
-DATA		:=	data
+DATA		:=	../data
 INCLUDES	:=	include
 
 #---------------------------------------------------------------------------------
@@ -90,61 +90,28 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-export GAME_ICON :=  $(CURDIR)/$(TARGET).bmp
-export GAME_TITLE     := "NTRLDR"
-export GAME_SUBTITLE1 := "dr1ft/UTP"
-export GAME_SUBTITLE2 := "utopia.moe"
+.PHONY: $(BUILD) clean
 
-.PHONY: bootloader bootstub clean arm7/$(TARGET).elf arm9/$(TARGET).elf
-
-all: bootloader bootstub $(TARGET).nds
-
-dist:	all
-
-$(TARGET).nds:	$(TARGET).arm7 $(TARGET).arm9
-	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7.elf -9 $(TARGET).arm9.elf -b $(TARGET).bmp "NTRLDR;dr1ft/UTP;utopia.moe"
-
-$(TARGET).arm7: arm7/$(TARGET).elf
-	cp arm7/$(TARGET).elf $(TARGET).arm7.elf
-
-$(TARGET).arm9: arm9/$(TARGET).elf
-	cp arm9/$(TARGET).elf $(TARGET).arm9.elf
+all: $(BUILD)
 
 #---------------------------------------------------------------------------------
-arm7/$(TARGET).elf:
-	@$(MAKE) -C arm7
-	
-#---------------------------------------------------------------------------------
-arm9/$(TARGET).elf:
-	@$(MAKE) -C arm9
-
-#---------------------------------------------------------------------------------
-#$(BUILD):
-	#$(shell ./git.sh)
-	#@[ -d $@ ] || mkdir -p $@
-	#@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+$(BUILD):
+	$(shell ./git.sh)
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(DATA) $(shell find -name *.elf)  $(SOURCES)/git.h
-data:
-	@mkdir -p data
-
-bootloader: data
-	@$(MAKE) -C bootloader LOADBIN=$(CURDIR)/data/load.bin
-
-bootstub: data
-	@$(MAKE) -C bootstub
-
 #---------------------------------------------------------------------------------
 else
 
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-#$(OUTPUT).nds	: 	$(OUTPUT).elf
-#$(OUTPUT).elf	:	$(OFILES)
+$(OUTPUT).nds	: 	$(OUTPUT).elf
+$(OUTPUT).elf	:	$(OFILES)
 
 #---------------------------------------------------------------------------------
 %.bin.o	:	%.bin
